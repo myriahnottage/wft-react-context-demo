@@ -1,6 +1,17 @@
+import { useContext } from "react";
+
 import LoginForm from "./LoginForm"
 
+import AuthContext from "../../context/AuthContext";
+
 const LoginPage = (props) => {
+
+    const { authenticated } = useContext(AuthContext); // Consume the context
+
+    if (authenticated) {
+        return null;
+    }
+
     return (
         <div>
             <LoginForm />

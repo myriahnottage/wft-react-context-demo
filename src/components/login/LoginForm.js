@@ -1,59 +1,52 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 
-class LoginForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: '',
-            password: '',
-        };
+import AuthContext from "../../context/AuthContext";
 
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleFormSubmit = this.handleFormSubmit.bind(this);
-    }
+function LoginForm() {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
-    handleInputChange(event) {
-        this.setState({
-            [event.target.name]: event.target.value
-        });
-    }
+    const { login } = useContext(AuthContext)
 
-    handleFormSubmit(event) {
+    function handleFormSubmit(event) {
         event.preventDefault();
-        
+
+        login(username, password);
     }
 
-    render() {
-        return (
-            <form onSubmit={this.handleFormSubmit}>
+    return (
+        <>
+            <h3>Login</h3>
+            <form onSubmit={handleFormSubmit}>
                 <div>
                     <label htmlFor="username">Username</label>
-                    <input 
+                    <input
                         id="username"
                         name="username"
-                        type="text" 
-                        placeholder="Username"  
-                        value={this.state.username}
-                        onChange={this.handleInputChange}
+                        type="text"
+                        placeholder="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
                 <div>
                     <label htmlFor="password">Password</label>
-                    <input 
+                    <input
                         id="password"
                         name="password"
-                        type="password" 
+                        type="password"
                         placeholder="Password"
-                        value={this.state.password}
-                        onChange={this.handleInputChange}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
                 <div>
                     <button type="submit">Login</button>
                 </div>
             </form>
-        )
-    }
+        </>
+    )
+
 }
 
 export default LoginForm;

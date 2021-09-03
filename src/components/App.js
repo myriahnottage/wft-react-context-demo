@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import LoginPage from "./login"
 import RegisterPage from "./register";
 import ContactsPage from "./contacts";
 import ContactDetailsPage from "./contact-details";
 import ContactCreatePage from "./contact-create";
 import { getContacts } from "../utils/contacts";
+
+import AuthContext from "../context/AuthContext";
 
 const mockContacts = [
   {
@@ -15,7 +17,7 @@ const mockContacts = [
     "phoneNumber": "351-346-6140",
     "email": "csnelman0@blog.com",
     "address": "09 Eggendart Parkway"
-  }, 
+  },
   {
     "id": 2,
     "firstName": "Tammara",
@@ -24,7 +26,7 @@ const mockContacts = [
     "phoneNumber": "676-783-9239",
     "email": "tallcorn1@senate.gov",
     "address": "78145 Brentwood Court"
-  }, 
+  },
   {
     "id": 3,
     "firstName": "Cassandry",
@@ -33,7 +35,7 @@ const mockContacts = [
     "phoneNumber": "223-879-6692",
     "email": "croze2@w3.org",
     "address": "2079 Morrow Parkway"
-  }, 
+  },
   {
     "id": 4,
     "firstName": "Koressa",
@@ -46,35 +48,48 @@ const mockContacts = [
 ];
 
 
-class App extends React.Component {
+function App() {
 
-  constructor(props) {
-    super(props);
+   const [contacts, setContacts] = useState([]);
+   const [authenticated, setAuthenticated] = useState(null);
 
-    this.state = {
-      contacts: []
-    }
-  }
 
-  componentDidMount() {
+   useEffect(() => {
+
     const storedContacts = getContacts();
 
-    this.setState({
-      contacts: storedContacts.length ? storedContacts : mockContacts
-    })
+    setContacts(storedContacts.length ? storedContacts : mockContacts);
+
+   }, []);
+
+
+
+  function login(username, password) {
+
+    console.log(username, password)
+
+    // if good
+    setAuthenticated(true);
+    //else
+    // setAuthenticated(null);
   }
 
-  render() {
-    return (
-      <div>
+  function logout() {
+    setAuthenticated(null);
+  }
+
+  return (
+    <div>
+      <AuthContext.Provider value={{ login, authenticated }}>
         <LoginPage />
         <RegisterPage />
-        <ContactsPage contacts={this.state.contacts} />
-        <ContactDetailsPage contact={this.state.contacts[0]} />
+        <ContactsPage contacts={contacts} />
+        <ContactDetailsPage contact={contacts[0]} />
         <ContactCreatePage />
-      </div>
-    );
-  }
+      </AuthContext.Provider>
+    </div>
+  );
+
 }
 
 export default App;
