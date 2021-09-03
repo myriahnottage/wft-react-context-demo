@@ -1,17 +1,25 @@
 import React, { useState, useContext } from 'react';
 
+// Third Party
+import { useHistory } from "react-router-dom";
+
+// Context
 import AuthContext from "../../context/AuthContext";
 
 function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const { login } = useContext(AuthContext)
+    const { login } = useContext(AuthContext) // Consume the context
+
+    const history = useHistory()
 
     function handleFormSubmit(event) {
         event.preventDefault();
 
         login(username, password);
+
+        history.push('/contacts')
     }
 
     return (

@@ -1,11 +1,27 @@
 import React, { useState, useEffect } from "react";
+
+// Third-party
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+} from "react-router-dom";
+
+
+
+// Components
 import LoginPage from "./login"
 import RegisterPage from "./register";
 import ContactsPage from "./contacts";
 import ContactDetailsPage from "./contact-details";
 import ContactCreatePage from "./contact-create";
+import NotFoundPage from "../components/errors/NotFoundPage"
+
+// Utilities
 import { getContacts } from "../utils/contacts";
 
+// Context
 import AuthContext from "../context/AuthContext";
 
 const mockContacts = [
@@ -48,6 +64,16 @@ const mockContacts = [
 ];
 
 
+function HomePage() {
+  return (
+    <div>
+      <h1>Welcome Home</h1>
+    </div>
+  )
+
+}
+
+
 function App() {
 
    const [contacts, setContacts] = useState([]);
@@ -70,6 +96,8 @@ function App() {
 
     // if good
     setAuthenticated(true);
+
+
     //else
     // setAuthenticated(null);
   }
@@ -79,15 +107,60 @@ function App() {
   }
 
   return (
-    <div>
-      <AuthContext.Provider value={{ login, authenticated }}>
-        <LoginPage />
-        <RegisterPage />
-        <ContactsPage contacts={contacts} />
-        <ContactDetailsPage contact={contacts[0]} />
-        <ContactCreatePage />
-      </AuthContext.Provider>
-    </div>
+
+    <Router>
+      <div>
+
+        <nav>
+          <ul>
+          <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/register">Register</Link>
+            </li>
+            <li>
+              <Link to="/contacts">Contacts</Link>
+            </li>
+          </ul>
+        </nav>
+
+
+
+        <AuthContext.Provider value={{ login, authenticated }}>
+
+          <Switch>
+
+            <Route exact path="/">
+              <HomePage />
+            </Route>
+
+            <Route path="/login">
+              <LoginPage />
+            </Route>
+            <Route path="/register">
+              <RegisterPage />
+            </Route>
+            <Route path="/contacts/detail">
+              <ContactDetailsPage contact={contacts[0]} />
+            </Route>
+            <Route path="/contacts/new">
+              <ContactCreatePage />
+            </Route>
+            <Route path="/contacts">
+              <ContactsPage contacts={contacts} />
+            </Route>
+            <Route>
+              <NotFoundPage />
+            </Route>
+          </Switch>
+
+        </AuthContext.Provider>
+      </div>
+    </Router>
   );
 
 }
